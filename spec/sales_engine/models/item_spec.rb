@@ -28,6 +28,16 @@ describe SalesEngine::Models::Item do
     end
   end
 
+  describe '#merchant' do
+    let!(:item) { add_instance(:item, id: 1, merchant_id: 1) }
+    let!(:matching_merchant) { add_instance(:merchant, id: 1) }
+    before { add_instance(:merchant, id: 2) }
+
+    it "returns a Merchant instance whose id matches the item's merchant_id" do
+      item.merchant.should eq matching_merchant
+    end
+  end
+
   describe '#best_day' do
     let!(:item) { add_instance(:item, id: 1) }
     let(:best_day) { '2012-02-26 20:56:50 UTC' }

@@ -13,6 +13,10 @@ module SalesEngine
         Invoice.find_all_by_id(invoice_items.map(&:invoice_id))
       end
 
+      def merchant
+        Merchant.find_by_id(merchant_id)
+      end
+
       def best_day
         invoices.group_by {|invoice| invoice.created_at.to_date }.
                  max_by {|array| array.last.size }.first
