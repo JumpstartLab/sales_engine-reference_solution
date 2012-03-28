@@ -38,4 +38,14 @@ describe SalesEngine::Models::Invoice do
       invoice.items.should =~ [matching_item]
     end
   end
+
+  describe '#transactions' do
+    let!(:invoice) { add_instance(:invoice, id: 1) }
+    let!(:matching_transaction) { add_instance(:transaction, invoice_id: 1) }
+    before { add_instance(:transaction, invoice_id: 2) }
+
+    it "returns the Transaction instances whose invoice_id matches the invoice's id" do
+      invoice.transactions.should =~ [matching_transaction]
+    end
+  end
 end

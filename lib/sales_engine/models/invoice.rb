@@ -19,6 +19,10 @@ module SalesEngine
       def items
         Item.find_all_by_id(invoice_items.map(&:item_id))
       end
+
+      def transactions
+        Transaction.find_all_by_invoice_id(id)
+      end
     end
   end
 end
