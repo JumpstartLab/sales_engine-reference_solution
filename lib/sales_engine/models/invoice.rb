@@ -6,6 +6,12 @@ module SalesEngine
       CSV_FILE_NAME = 'invoices.csv'
 
       def self.average_items
+        invoice_item_sizes = InvoiceItem.instances
+                                        .group_by(&:invoice_id)
+                                        .values.map(&:size)
+
+        average = Helpers.average(invoice_item_sizes)
+        Helpers.format_number(average)
       end
 
       def customer

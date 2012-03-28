@@ -2,7 +2,18 @@ describe SalesEngine::Models::Invoice do
   include_context 'model examples'
 
   describe '.average_items' do
-    pending 'returns the average number of items for each invoice' do
+    before do
+      4.times do |i|
+        add_instance(:invoice, id: i)
+        i.next.times do
+          add_instance(:invoice_item, invoice_id: i)
+        end
+      end
+    end
+
+    it 'returns the average number of items for each invoice' do
+      average_items = SalesEngine::Models::Invoice.average_items
+      average_items.should be_a_big_decimal_equating_to(2.5)
     end
   end
 

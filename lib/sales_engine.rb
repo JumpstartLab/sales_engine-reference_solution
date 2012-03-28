@@ -1,6 +1,7 @@
 require 'sales_engine/models'
 require 'sales_engine/csv_parser'
 require 'sales_engine/dynamic_finder'
+require 'sales_engine/helpers'
 require 'sales_engine/transformation'
 
 module SalesEngine
