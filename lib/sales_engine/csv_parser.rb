@@ -7,9 +7,12 @@ module SalesEngine
     end
 
     def parse
-      CSV.foreach(@csv_path, headers: :first_row, converters: :all) do |row|
-        yield row
-      end
+      CSV.foreach(@csv_path,
+        headers: :first_row,
+        converters: :all,
+        header_converters:
+        :symbol
+      ) {|row| yield row }
     end
   end
 end

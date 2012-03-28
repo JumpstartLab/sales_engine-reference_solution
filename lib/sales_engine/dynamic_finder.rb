@@ -18,7 +18,7 @@ module SalesEngine
 
     def match_find_all_by
       if @attribute = /\Afind_all_by_(?<attr>\w+)/ =~ @method_name && attr
-        @finder_method = :select
+        @finder_method = :find_all
       end
     end
   end

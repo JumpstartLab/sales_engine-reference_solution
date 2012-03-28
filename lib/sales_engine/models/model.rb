@@ -23,8 +23,8 @@ module SalesEngine
 
             if dynamic_finder.match?
               instances.send(dynamic_finder.finder_method) do |instance|
-                ivar = "@#{dynamic_finder.attribute}"
-                instance.instance_variable_get(ivar) == args.first
+                attribute_value = instance.send(dynamic_finder.attribute)
+                Array(args.first).include?(attribute_value)
               end
             else
               super
@@ -32,8 +32,13 @@ module SalesEngine
           end
 
           def initialize(attributes)
-            attributes.each do |attribute_name, attribute_value|
-              instance_variable_set("@#{attribute_name}", attribute_value)
+            attributes.each do |name, value|
+              transformation = Transformation.new(name, value)
+              instance_variable_set("@#{name}", transformation.transform)
+
+              self.class.class_eval do
+                define_method(name) { instance_variable_get("@#{name}") }
+              end
             end
           end
         end
