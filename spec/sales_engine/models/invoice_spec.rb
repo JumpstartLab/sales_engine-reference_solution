@@ -20,6 +20,7 @@ describe SalesEngine::Models::Invoice do
   describe '#customer' do
     let!(:invoice) { add_instance(:invoice, customer_id: 1) }
     let!(:matching_customer) { add_instance(:customer, id: 1) }
+    before { add_instance(:customer, id: 2) }
 
     it "returns a Customer instance whose id matches the invoice's customer_id" do
       invoice.customer.should eq matching_customer
