@@ -26,9 +26,7 @@ describe SalesEngine::Models::Merchant do
   describe '.most_items' do
     {one: 30, two: 20, three: 10}.each do |k, v|
       let("merchant_#{k}") do
-        double("merchant_#{k}", invoices: [
-          double(total_items: v), double(total_items: v)
-        ])
+        double("merchant_#{k}", invoices: 2.times.map { double(total_items: v) })
       end
     end
 
@@ -52,16 +50,12 @@ describe SalesEngine::Models::Merchant do
       let(:date) { the_date }
 
       before do
-        merchant_1 = double.tap do |merchant|
-          merchant.should_receive(:revenue).with(date).and_return(500)
-        end
-
-        merchant_2 = double.tap do |merchant|
-          merchant.should_receive(:revenue).with(date).and_return(500)
-        end
-
         SalesEngine::Models::Merchant.should_receive(:instances) do
-          [merchant_1, merchant_2]
+          2.times.map do
+            double.tap do |merchant|
+              merchant.should_receive(:revenue).with(date).and_return(500)
+            end
+          end
         end
       end
 
@@ -73,42 +67,33 @@ describe SalesEngine::Models::Merchant do
   end
 
   describe '#revenue' do
-    let!(:merchant) { add_instance(:merchant, id: 1) }
-    let(:date) { the_date }
-
-    before do
-      add_instance(:invoice,
-        id: 1, merchant_id: 1, created_at: date.next_day.to_s
-      )
-      add_instance(:invoice_item, invoice_id: 1, unit_price: 225, quantity: 1)
-      add_transaction(invoice_id: 1)
-
-      add_instance(:invoice,
-        id: 2, merchant_id: 1, created_at: date.prev_day.to_s
-      )
-      add_instance(:invoice_item, invoice_id: 2, unit_price: 225, quantity: 1)
-      add_transaction(invoice_id: 2)
-    end
+    let(:merchant) { add_instance(:merchant) }
 
     context 'given no date' do
+      before do
+        merchant.should_receive(:invoices) { 2.times.map {
+          double(revenue: 225)
+        }}
+      end
+
       it "returns the sum of the merchant's invoices total amount" do
         merchant.revenue.should be_a_big_decimal_equating_to(450.0)
       end
     end
 
     context 'given a date' do
-      before do
-        add_instance(:invoice, id: 3, merchant_id: 1, created_at: date.to_s)
-        add_instance(:invoice_item, invoice_id: 3, unit_price: 20, quantity: 1)
-        add_transaction(invoice_id: 3)
+      let(:date) { the_date }
 
-        add_instance(:invoice, id: 4, merchant_id: 1, created_at: date.to_s)
-        add_instance(:invoice_item, invoice_id: 4, unit_price: 30, quantity: 2)
-        add_transaction(invoice_id: 4)
+      before do
+        merchant.should_receive(:invoices) { 2.times.map {
+          double(revenue: 225).tap {|invoice|
+            invoice.should_receive(:created_on?).with(date).and_return(true)
+          }
+        }}
       end
 
       it "returns the sum of the merchant's invoices (created on the date) total amount" do
-        merchant.revenue(date).should be_a_big_decimal_equating_to(80.0)
+        merchant.revenue(date).should be_a_big_decimal_equating_to(450.0)
       end
     end
   end

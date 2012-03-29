@@ -144,7 +144,7 @@ describe SalesEngine::Models::Invoice do
 
     before do
       invoice.should_receive(:invoice_items) do
-        [double(total_amount: 25), double(total_amount: 25)]
+        2.times.map { double(total_amount: 25) }
       end
     end
 

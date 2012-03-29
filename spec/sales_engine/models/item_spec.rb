@@ -24,9 +24,7 @@ describe SalesEngine::Models::Item do
   describe '.most_items' do
     {one: 30, two: 20, three: 10}.each do |k, v|
       let("item_#{k}") do
-        double("item_#{k}", invoice_items: [
-          double(quantity: v), double(quantity: v)
-        ])
+        double("item_#{k}", invoice_items: 2.times.map { double(quantity: v) })
       end
     end
 

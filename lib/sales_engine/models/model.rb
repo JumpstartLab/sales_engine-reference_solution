@@ -43,7 +43,11 @@ module SalesEngine
           end
 
           def created_on?(date)
-            created_at.to_date == date
+            if Range === date
+              date.cover?(created_at.to_date)
+            else
+              created_at.to_date == date
+            end
           end
         end
       end

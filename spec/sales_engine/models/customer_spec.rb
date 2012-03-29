@@ -24,9 +24,7 @@ describe SalesEngine::Models::Customer do
   describe '.most_revenue' do
     {one: 30, two: 20, three: 10}.each do |k, v|
       let("customer_#{k}") do
-        double("customer_#{k}", invoices: [
-          double(revenue: v), double(revenue: v)
-        ])
+        double("customer_#{k}", invoices: 2.times.map { double(revenue: v) })
       end
     end
 
