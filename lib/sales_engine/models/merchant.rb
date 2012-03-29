@@ -16,19 +16,14 @@ module SalesEngine
       end
 
       def self.revenue(date)
-        total_amount = instances.map {|instance|
-          instance.revenue(date)
-        }.inject(:+)
-
-        Helpers.format_number(total_amount)
+        Helpers.format_number(instances.map {|instance|
+          instance.revenue(date) }.inject(:+))
       end
 
       def revenue(date = nil)
-        total_amount = invoices.select {|invoice|
+        Helpers.format_number(invoices.select {|invoice|
           date ? invoice.created_at.to_date == date : true
-        }.map(&:revenue).inject(:+)
-
-        Helpers.format_number(total_amount)
+        }.map(&:revenue).inject(:+))
       end
 
       def items
@@ -45,8 +40,7 @@ module SalesEngine
 
       def favorite_customer
         transactions.group_by(&:invoice).max_by {|array|
-          array.last.size
-        }.first.customer
+          array.last.size }.first.customer
       end
 
       def customers_with_pending_invoices

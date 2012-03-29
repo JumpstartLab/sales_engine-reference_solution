@@ -7,14 +7,12 @@ module SalesEngine
 
       def self.most_items
         instances.sort_by {|instance|
-          instance.invoices.map(&:total_items_count).inject(:+)
-        }.last
+          instance.invoices.map(&:total_items_count).inject(:+) }.last
       end
 
       def self.most_revenue
         instances.sort_by {|instance|
-          instance.invoices.map(&:revenue).inject(:+)
-        }.last
+          instance.invoices.map(&:revenue).inject(:+) }.last
       end
 
       def invoices
