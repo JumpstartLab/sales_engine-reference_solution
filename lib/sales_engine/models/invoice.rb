@@ -33,6 +33,10 @@ module SalesEngine
       def total
         invoice_items.map(&:total).inject(:+)
       end
+
+      def total_items
+        invoice_items.map(&:quantity).inject(:+)
+      end
     end
   end
 end

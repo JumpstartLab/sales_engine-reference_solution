@@ -70,8 +70,21 @@ describe SalesEngine::Models::Invoice do
       end
     end
 
-    it "returns the sum of all of the invoice's invoice_items total" do
+    it "returns the sum of the invoice's invoice_items total" do
       invoice.total.should eq 50
+    end
+  end
+
+  describe '#total_items' do
+    let!(:invoice) { add_instance(:invoice, id: 1) }
+
+    before do
+      add_instance(:invoice_item, invoice_id: 1, quantity: 2)
+      add_instance(:invoice_item, invoice_id: 1, quantity: 3)
+    end
+
+    it "returns the sum of the invoice's invoice_items quantity" do
+      invoice.total_items.should eq 5
     end
   end
 end

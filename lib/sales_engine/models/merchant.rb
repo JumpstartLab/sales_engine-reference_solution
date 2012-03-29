@@ -9,6 +9,12 @@ module SalesEngine
         instances.sort_by(&:revenue).reverse.take(limit)
       end
 
+      def self.most_items(limit)
+        instances.sort_by {|instance|
+          instance.invoices.map(&:total_items).inject(:+)
+        }.reverse.take(limit)
+      end
+
       def revenue
         total_amount = transactions.select(&:successful?).map {|transaction|
           transaction.invoice.total }.inject(:+)
