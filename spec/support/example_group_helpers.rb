@@ -11,4 +11,9 @@ module ExampleGroupHelpers
 
     SalesEngine::Models.const_get(model_class).add_instance(attributes)
   end
+
+  def add_transaction(attributes = {})
+    default_attributes = {result: 'success'}
+    add_instance(:transaction, default_attributes.merge(attributes))
+  end
 end

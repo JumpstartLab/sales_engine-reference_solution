@@ -29,6 +29,10 @@ module SalesEngine
       def transactions
         Transaction.find_all_by_invoice_id(id)
       end
+
+      def total
+        invoice_items.map(&:total).inject(:+)
+      end
     end
   end
 end

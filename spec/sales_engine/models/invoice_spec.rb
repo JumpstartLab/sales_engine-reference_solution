@@ -60,4 +60,18 @@ describe SalesEngine::Models::Invoice do
       invoice.transactions.should =~ [matching_transaction]
     end
   end
+
+  describe '#total' do
+    let(:invoice) { add_instance(:invoice, id: 1) }
+
+    before do
+      invoice.should_receive(:invoice_items) do
+        [double(total: 25), double(total: 25)]
+      end
+    end
+
+    it "returns the sum of all of the invoice's invoice_items total" do
+      invoice.total.should eq 50
+    end
+  end
 end

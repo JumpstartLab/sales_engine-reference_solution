@@ -8,6 +8,10 @@ module SalesEngine
       def invoice
         Invoice.find_by_id(invoice_id)
       end
+
+      def successful?
+        result == 'success'
+      end
     end
   end
 end

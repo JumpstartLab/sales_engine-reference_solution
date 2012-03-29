@@ -10,4 +10,22 @@ describe SalesEngine::Models::Transaction do
       transaction.invoice.should eq matching_invoice
     end
   end
+
+  describe '#successful?' do
+    context %|with the transaction's result as "success"| do
+      let(:transaction) { add_instance(:transaction, result: 'success') }
+
+      it 'returns true' do
+        transaction.should be_successful
+      end
+    end
+
+    context %|with the transaction's result as "fail"| do
+      let(:transaction) { add_instance(:transaction, result: 'fail') }
+
+      it 'returns false' do
+        transaction.should_not be_successful
+      end
+    end
+  end
 end

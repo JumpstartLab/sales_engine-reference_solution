@@ -12,6 +12,10 @@ module SalesEngine
       def item
         Item.find_by_id(item_id)
       end
+
+      def total
+        unit_price * quantity
+      end
     end
   end
 end

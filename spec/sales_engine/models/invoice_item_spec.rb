@@ -20,4 +20,14 @@ describe SalesEngine::Models::InvoiceItem do
       invoice_item.item.should eq matching_item
     end
   end
+
+  describe '#total' do
+    let(:invoice_item) do
+      add_instance(:invoice_item, unit_price: 10, quantity: 3)
+    end
+
+    it 'returns the unit_price multiplied by the quantity' do
+      invoice_item.total.should eq 30
+    end
+  end
 end
