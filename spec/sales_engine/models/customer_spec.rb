@@ -21,6 +21,26 @@ describe SalesEngine::Models::Customer do
     end
   end
 
+  describe '.most_revenue' do
+    {one: 30, two: 20, three: 10}.each do |k, v|
+      let("customer_#{k}") do
+        double("customer_#{k}", invoices: [
+          double(revenue: v), double(revenue: v)
+        ])
+      end
+    end
+
+    before do
+      SalesEngine::Models::Customer.should_receive(:instances) do
+        [customer_three, customer_two, customer_one]
+      end
+    end
+
+    it 'returns the Customer instance with the highest revenue from invoices' do
+      SalesEngine::Models::Customer.most_revenue.should eq customer_one
+    end
+  end
+
   describe '#invoices' do
     let!(:customer) { add_instance(:customer, id: 1) }
     let!(:matching_invoice) { add_instance(:invoice, customer_id: 1) }

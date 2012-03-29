@@ -11,6 +11,12 @@ module SalesEngine
         }.last
       end
 
+      def self.most_revenue
+        instances.sort_by {|instance|
+          instance.invoices.map(&:revenue).inject(:+)
+        }.last
+      end
+
       def invoices
         Invoice.find_all_by_customer_id(id)
       end
