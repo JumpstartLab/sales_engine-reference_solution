@@ -24,4 +24,20 @@ describe SalesEngine::Models::Customer do
       customer.transactions.should eq [matching_transaction]
     end
   end
+
+  describe '#favorite_merchant' do
+    let!(:customer) { add_instance(:customer, id: 1) }
+    let!(:favorite_merchant) { add_instance(:merchant, id: 1) }
+
+    before do
+      3.times { add_instance(:invoice, customer_id: 1, merchant_id: 1)  }
+
+      add_instance(:merchant, id: 2)
+      2.times { add_instance(:invoice, customer_id: 1, merchant_id: 2) }
+    end
+
+    it 'returns the Merchant instance where the customer has the most invoices' do
+      customer.favorite_merchant.should eq favorite_merchant
+    end
+  end
 end

@@ -27,6 +27,16 @@ describe SalesEngine::Models::Invoice do
     end
   end
 
+  describe '#merchant' do
+    let!(:invoice) { add_instance(:invoice, merchant_id: 1) }
+    let!(:matching_merchant) { add_instance(:merchant, id: 1) }
+    before { add_instance(:merchant, id: 2) }
+
+    it "returns a Merchant instance whose id matches the invoice's merchant_id" do
+      invoice.merchant.should eq matching_merchant
+    end
+  end
+
   describe '#invoice_items' do
     let!(:invoice) { add_instance(:invoice, id: 1) }
     let!(:matching_invoice_item) { add_instance(:invoice_item, invoice_id: 1) }

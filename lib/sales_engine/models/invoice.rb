@@ -17,6 +17,10 @@ module SalesEngine
         Customer.find_by_id(customer_id)
       end
 
+      def merchant
+        Merchant.find_by_id(merchant_id)
+      end
+
       def invoice_items
         InvoiceItem.find_all_by_invoice_id(id)
       end
