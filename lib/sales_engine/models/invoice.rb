@@ -5,20 +5,20 @@ module SalesEngine
 
       CSV_FILE_NAME = 'invoices.csv'
 
-      def self.average_items
-        Helpers.format_number(Helpers.average(
-          InvoiceItem.instances.group_by(&:invoice_id).values.map(&:size)
-        ))
-      end
-
       def self.pending
         instances.reject(&:paid?)
       end
 
-      def self.average_revenue(date = nil)
-        Helpers.format_number(Helpers.average(instances.select {|instance|
+      def self.average_items(date = nil)
+        Helpers.format_average(instances.select {|instance|
           date ? instance.created_on?(date) : true
-        }.map(&:revenue)))
+        }.map(&:total_items_count))
+      end
+
+      def self.average_revenue(date = nil)
+        Helpers.format_average(instances.select {|instance|
+          date ? instance.created_on?(date) : true
+        }.map(&:revenue))
       end
 
       def customer

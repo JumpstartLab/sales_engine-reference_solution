@@ -1,22 +1,6 @@
 describe SalesEngine::Models::Invoice do
   include_context 'model examples'
 
-  describe '.average_items' do
-    before do
-      4.times do |i|
-        add_instance(:invoice, id: i)
-        i.next.times do
-          add_instance(:invoice_item, invoice_id: i)
-        end
-      end
-    end
-
-    it 'returns the average number of items for each invoice' do
-      average_items = SalesEngine::Models::Invoice.average_items
-      average_items.should be_a_big_decimal_equating_to(2.5)
-    end
-  end
-
   describe '.pending' do
     let(:unpaid_invoice) { add_instance(:invoice) }
 
@@ -30,6 +14,40 @@ describe SalesEngine::Models::Invoice do
 
     it 'returns all of the Invoice instances that are unpaid' do
       SalesEngine::Models::Invoice.pending.should eq [unpaid_invoice]
+    end
+  end
+
+  describe '.average_items' do
+    let(:date) { the_date }
+
+    before do
+      4.times do |i|
+        add_instance(:invoice, created_at: date.prev_day.to_s).tap do |invoice|
+          invoice.stub(:total_items_count).and_return(i.next)
+        end
+      end
+    end
+
+    context 'given no date' do
+      it 'returns the average number of items for each Invoice instance' do
+        average_items = SalesEngine::Models::Invoice.average_items
+        average_items.should be_a_big_decimal_equating_to(2.5)
+      end
+    end
+
+    context 'given a date' do
+      before do
+        4.times do |i|
+          add_instance(:invoice, created_at: date.to_s).tap do |invoice|
+            invoice.should_receive(:total_items_count).and_return(i.next)
+          end
+        end
+      end
+
+      it 'returns the average number of items for each Invoice instance created on the date' do
+        average_items = SalesEngine::Models::Invoice.average_items(date)
+        average_items.should be_a_big_decimal_equating_to(2.5)
+      end
     end
   end
 

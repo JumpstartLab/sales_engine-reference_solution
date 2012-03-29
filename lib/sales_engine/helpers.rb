@@ -9,5 +9,9 @@ module SalesEngine
     def self.average(array)
       array.inject(:+).to_f / array.size
     end
+
+    def self.format_average(number)
+      format_number(average(number))
+    end
   end
 end
