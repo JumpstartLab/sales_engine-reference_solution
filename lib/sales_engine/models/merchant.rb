@@ -20,6 +20,9 @@ module SalesEngine
           instance.revenue(date) }.inject(:+))
       end
 
+      def self.dates_by_revenue(limit = nil)
+      end
+
       def revenue(date = nil)
         Helpers.format_number(invoices.select {|invoice|
           date ? invoice.created_on?(date) : true

@@ -14,7 +14,7 @@ describe SalesEngine::Models::Item do
       end
     end
 
-    context 'given 2' do
+    context 'given a limit of 2' do
       it 'returns the top 2 Item instances in descending order by revenue' do
         SalesEngine::Models::Item.most_revenue(2).should eq [item_one, item_two]
       end
@@ -34,7 +34,7 @@ describe SalesEngine::Models::Item do
       end
     end
 
-    context 'given 2' do
+    context 'given a limit of 2' do
       it 'returns the top 2 Item instances in descending order by total number sold' do
         SalesEngine::Models::Item.most_items(2).should eq [item_one, item_two]
       end

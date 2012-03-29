@@ -14,7 +14,7 @@ describe SalesEngine::Models::Merchant do
       end
     end
 
-    context 'given 2' do
+    context 'given a limit of 2' do
       it 'returns the top 2 Merchant instances in descending order by revenue' do
         SalesEngine::Models::Merchant.most_revenue(2).should eq [
           merchant_one, merchant_two
@@ -36,7 +36,7 @@ describe SalesEngine::Models::Merchant do
       end
     end
 
-    context 'given 2' do
+    context 'given a limit of 2' do
       it 'returns the top 2 Merchant instances in descending order by total items sold' do
         SalesEngine::Models::Merchant.most_items(2).should eq [
           merchant_one, merchant_two
@@ -62,6 +62,22 @@ describe SalesEngine::Models::Merchant do
       it 'returns the sum of the merchants revenue for the date' do
         revenue = SalesEngine::Models::Merchant.revenue(date)
         revenue.should be_a_big_decimal_equating_to(1000.0)
+      end
+    end
+  end
+
+  pending '.dates_by_revenue' do
+    context 'given a limit of 2' do
+      it 'returns the top 2 Date instances with the higest revenue in descending order' do
+        dates_by_revenue = SalesEngine::Models::Merchant.dates_by_revenue(2)
+        dates_by_revenue.should eq []
+      end
+    end
+
+    context 'given no limit' do
+      it 'returns Date instances in descending order by highest revenue' do
+        dates_by_revenue = SalesEngine::Models::Merchant.dates_by_revenue
+        dates_by_revenue.should eq []
       end
     end
   end
