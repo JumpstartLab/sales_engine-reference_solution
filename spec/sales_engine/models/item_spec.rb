@@ -16,7 +16,7 @@ describe SalesEngine::Models::Item do
 
     context 'given 2' do
       it 'returns the top 2 Item instances in descending order by revenue' do
-        SalesEngine::Models::Item.most_revenue(2).should == [item_one, item_two]
+        SalesEngine::Models::Item.most_revenue(2).should eq [item_one, item_two]
       end
     end
   end
@@ -38,9 +38,7 @@ describe SalesEngine::Models::Item do
 
     context 'given 2' do
       it 'returns the top 2 Item instances in descending order by total number sold' do
-        SalesEngine::Models::Item.most_items(2).should == [
-         item_one, item_two
-        ]
+        SalesEngine::Models::Item.most_items(2).should eq [item_one, item_two]
       end
     end
   end
@@ -51,7 +49,7 @@ describe SalesEngine::Models::Item do
     before { add_instance(:invoice_item, item_id: 2) }
 
     it "returns the InvoiceItem instances whose item_id matches the item's id" do
-      item.invoice_items.should =~ [matching_invoice_item]
+      item.invoice_items.should eq [matching_invoice_item]
     end
   end
 
@@ -68,7 +66,7 @@ describe SalesEngine::Models::Item do
     end
 
     it "returns the Invoice instances whose id matches the invoice_id of the item's invoice_items" do
-      item.invoices.should =~ [matching_invoice]
+      item.invoices.should eq [matching_invoice]
     end
   end
 

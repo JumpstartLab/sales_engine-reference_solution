@@ -33,7 +33,7 @@ describe SalesEngine::Models::Invoice do
     before { add_instance(:invoice_item, invoice_id: 2) }
 
     it "returns the InvoiceItem instances whose invoice_id matches the invoice's id" do
-      invoice.invoice_items.should =~ [matching_invoice_item]
+      invoice.invoice_items.should eq [matching_invoice_item]
     end
   end
 
@@ -47,7 +47,7 @@ describe SalesEngine::Models::Invoice do
     end
 
     it "returns the Item instances whose id matches the item_id of the invoice's invoice_items" do
-      invoice.items.should =~ [matching_item]
+      invoice.items.should eq [matching_item]
     end
   end
 
@@ -57,7 +57,7 @@ describe SalesEngine::Models::Invoice do
     before { add_instance(:transaction, invoice_id: 2) }
 
     it "returns the Transaction instances whose invoice_id matches the invoice's id" do
-      invoice.transactions.should =~ [matching_transaction]
+      invoice.transactions.should eq [matching_transaction]
     end
   end
 

@@ -16,7 +16,7 @@ describe SalesEngine::Models::Merchant do
 
     context 'given 2' do
       it 'returns the top 2 Merchant instances in descending order by revenue' do
-        SalesEngine::Models::Merchant.most_revenue(2).should == [
+        SalesEngine::Models::Merchant.most_revenue(2).should eq [
           merchant_one, merchant_two
         ]
       end
@@ -40,7 +40,7 @@ describe SalesEngine::Models::Merchant do
 
     context 'given 2' do
       it 'returns the top 2 Merchant instances in descending order by total items sold' do
-        SalesEngine::Models::Merchant.most_items(2).should == [
+        SalesEngine::Models::Merchant.most_items(2).should eq [
           merchant_one, merchant_two
         ]
       end
@@ -119,7 +119,7 @@ describe SalesEngine::Models::Merchant do
     before { add_instance(:item, merchant_id: 2) }
 
     it "returns the Item instances whose merchant_id matches the merchant's id" do
-      merchant.items.should =~ [matching_item]
+      merchant.items.should eq [matching_item]
     end
   end
 
@@ -129,7 +129,7 @@ describe SalesEngine::Models::Merchant do
     before { add_instance(:invoice, merchant_id: 2) }
 
     it "returns the Invoice instances whose merchant_id matches the merchant's id" do
-      merchant.invoices.should =~ [matching_invoice]
+      merchant.invoices.should eq [matching_invoice]
     end
   end
 
@@ -144,7 +144,7 @@ describe SalesEngine::Models::Merchant do
     end
 
     it "returns the Transaction instances associated with the merchant's invoices" do
-      merchant.transactions.should =~ [matching_transaction]
+      merchant.transactions.should eq [matching_transaction]
     end
   end
 
@@ -182,7 +182,7 @@ describe SalesEngine::Models::Merchant do
     end
 
     it 'returns Customer instances who have unpaid invoices with the merchant' do
-      merchant.customers_with_pending_invoices.should =~ [
+      merchant.customers_with_pending_invoices.should eq [
         customer_one, customer_two
       ]
     end
