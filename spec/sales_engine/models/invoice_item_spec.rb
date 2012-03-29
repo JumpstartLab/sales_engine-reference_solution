@@ -21,13 +21,13 @@ describe SalesEngine::Models::InvoiceItem do
     end
   end
 
-  describe '#total' do
+  describe '#total_amount' do
     let(:invoice_item) do
       add_instance(:invoice_item, unit_price: 10, quantity: 3)
     end
 
     it 'returns the unit_price multiplied by the quantity' do
-      invoice_item.total.should eq 30
+      invoice_item.total_amount.should eq 30
     end
   end
 end

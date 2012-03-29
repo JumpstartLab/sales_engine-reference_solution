@@ -15,9 +15,30 @@ module SalesEngine
         }.reverse.take(limit)
       end
 
-      def revenue
-        total_amount = transactions.select(&:successful?).map {|transaction|
-          transaction.invoice.total }.inject(:+)
+      def self.revenue(date)
+        total_amount = instances.map {|instance|
+          instance.revenue(date)
+        }.inject(:+)
+
+        Helpers.format_number(total_amount)
+      end
+
+      def revenue(date = nil)
+        invoices_of_successful_transactions = transactions.
+                                              select(&:successful?).
+                                              map do |transaction|
+          invoice = transaction.invoice
+
+          if date
+            invoice if invoice.created_at.to_date == date
+          else
+            invoice
+          end
+        end
+
+        total_amount = invoices_of_successful_transactions.compact.
+                                                           map(&:total_amount).
+                                                           inject(:+)
 
         Helpers.format_number(total_amount)
       end

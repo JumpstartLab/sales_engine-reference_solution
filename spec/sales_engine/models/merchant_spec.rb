@@ -47,21 +47,69 @@ describe SalesEngine::Models::Merchant do
     end
   end
 
+  describe '.revenue' do
+    context 'given a date' do
+      let(:date) { Date.parse('Fri, 09 Mar 2012') }
+
+      before do
+        merchant_1 = double.tap do |merchant|
+          merchant.should_receive(:revenue).with(date).and_return(500)
+        end
+
+        merchant_2 = double.tap do |merchant|
+          merchant.should_receive(:revenue).with(date).and_return(500)
+        end
+
+        SalesEngine::Models::Merchant.should_receive(:instances) do
+          [merchant_1, merchant_2]
+        end
+      end
+
+      it 'returns the sum of the merchants revenue for the date' do
+        revenue = SalesEngine::Models::Merchant.revenue(date)
+        revenue.should be_a_big_decimal_equating_to(1000.0)
+      end
+    end
+  end
+
   describe '#revenue' do
     let!(:merchant) { add_instance(:merchant, id: 1) }
+    let(:date) { Date.parse('Fri, 09 Mar 2012') }
 
     before do
-      add_instance(:invoice, id: 1, merchant_id: 1)
+      add_instance(:invoice,
+        id: 1, merchant_id: 1, created_at: date.next_day.to_s
+      )
       add_instance(:invoice_item, invoice_id: 1, unit_price: 225, quantity: 1)
       add_transaction(invoice_id: 1)
 
-      add_instance(:invoice, id: 2, merchant_id: 1)
+      add_instance(:invoice,
+        id: 2, merchant_id: 1, created_at: date.prev_day.to_s
+      )
       add_instance(:invoice_item, invoice_id: 2, unit_price: 225, quantity: 1)
       add_transaction(invoice_id: 2)
     end
 
-    it 'returns the total amount of successful transactions for the merchant' do
-      merchant.revenue.should be_a_big_decimal_equating_to(450.0)
+    context 'given no date' do
+      it "returns the sum of the merchant's invoices total amount" do
+        merchant.revenue.should be_a_big_decimal_equating_to(450.0)
+      end
+    end
+
+    context 'given a date' do
+      before do
+        add_instance(:invoice, id: 3, merchant_id: 1, created_at: date.to_s)
+        add_instance(:invoice_item, invoice_id: 3, unit_price: 20, quantity: 1)
+        add_transaction(invoice_id: 3)
+
+        add_instance(:invoice, id: 4, merchant_id: 1, created_at: date.to_s)
+        add_instance(:invoice_item, invoice_id: 4, unit_price: 30, quantity: 2)
+        add_transaction(invoice_id: 4)
+      end
+
+      it "returns the sum of the merchant's invoices (created on the date) total amount" do
+        merchant.revenue(date).should be_a_big_decimal_equating_to(80.0)
+      end
     end
   end
 

@@ -30,11 +30,11 @@ module SalesEngine
         Transaction.find_all_by_invoice_id(id)
       end
 
-      def total
-        invoice_items.map(&:total).inject(:+)
+      def total_amount
+        invoice_items.map(&:total_amount).inject(:+)
       end
 
-      def total_items
+      def total_items_count
         invoice_items.map(&:quantity).inject(:+)
       end
     end

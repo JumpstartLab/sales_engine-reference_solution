@@ -61,21 +61,21 @@ describe SalesEngine::Models::Invoice do
     end
   end
 
-  describe '#total' do
+  describe '#total_amount' do
     let(:invoice) { add_instance(:invoice, id: 1) }
 
     before do
       invoice.should_receive(:invoice_items) do
-        [double(total: 25), double(total: 25)]
+        [double(total_amount: 25), double(total_amount: 25)]
       end
     end
 
-    it "returns the sum of the invoice's invoice_items total" do
-      invoice.total.should eq 50
+    it "returns the sum of the invoice's invoice_items total amount" do
+      invoice.total_amount.should eq 50
     end
   end
 
-  describe '#total_items' do
+  describe '#total_items_count' do
     let!(:invoice) { add_instance(:invoice, id: 1) }
 
     before do
@@ -84,7 +84,7 @@ describe SalesEngine::Models::Invoice do
     end
 
     it "returns the sum of the invoice's invoice_items quantity" do
-      invoice.total_items.should eq 5
+      invoice.total_items_count.should eq 5
     end
   end
 end
