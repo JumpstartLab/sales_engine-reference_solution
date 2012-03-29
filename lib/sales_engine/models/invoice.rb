@@ -84,6 +84,10 @@ module SalesEngine
       def revenue
         paid? ? total_amount : 0
       end
+
+      def charge(attributes)
+        Transaction.add_instance(attributes.merge(invoice_id: id))
+      end
     end
   end
 end

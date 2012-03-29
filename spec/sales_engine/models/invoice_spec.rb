@@ -274,4 +274,30 @@ describe SalesEngine::Models::Invoice do
       end
     end
   end
+
+  describe '#charge' do
+    let!(:invoice) { add_instance(:invoice, id: 1) }
+
+    let(:attributes) {{
+      credit_card_number: '555',
+      credit_card_expiration: '10/13',
+      result: 'success'
+    }}
+
+    it 'creates a Transaction instance' do
+      expect { invoice.charge(attributes) }.to change {
+        SalesEngine::Models::Transaction.instances.size
+      }.from(0).to(1)
+
+      SalesEngine::Models::Transaction.instances.first.tap do |transaction|
+        transaction.credit_card_number.should eq '555'
+        transaction.credit_card_expiration.should eq '10/13'
+        transaction.result.should eq 'success'
+      end
+    end
+
+    it 'associates the created Transaction instance with the invoice' do
+      invoice.charge(attributes).invoice.should eq invoice
+    end
+  end
 end
