@@ -17,6 +17,22 @@ describe SalesEngine::Models::Invoice do
     end
   end
 
+  describe '.pending' do
+    let(:unpaid_invoice) { add_instance(:invoice) }
+
+    before do
+      unpaid_invoice.should_receive(:paid?).and_return(false)
+
+      add_instance(:invoice).tap do |invoice|
+        invoice.should_receive(:paid?).and_return(true)
+      end
+    end
+
+    it 'returns all of the Invoice instances that are unpaid' do
+      SalesEngine::Models::Invoice.pending.should eq [unpaid_invoice]
+    end
+  end
+
   describe '#customer' do
     let!(:invoice) { add_instance(:invoice, customer_id: 1) }
     let!(:matching_customer) { add_instance(:customer, id: 1) }

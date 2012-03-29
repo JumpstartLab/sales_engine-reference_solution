@@ -13,6 +13,10 @@ module SalesEngine
         Helpers.format_number(average)
       end
 
+      def self.pending
+        instances.reject(&:paid?)
+      end
+
       def customer
         Customer.find_by_id(customer_id)
       end
