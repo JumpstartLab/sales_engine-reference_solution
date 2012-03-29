@@ -21,6 +21,30 @@ describe SalesEngine::Models::Item do
     end
   end
 
+  describe '.most_items' do
+    {one: 30, two: 20, three: 10}.each do |k, v|
+      let("item_#{k}") do
+        double("item_#{k}", invoice_items: [
+          double(quantity: v), double(quantity: v)
+        ])
+      end
+    end
+
+    before do
+      SalesEngine::Models::Item.should_receive(:instances) do
+        [item_three, item_two, item_one]
+      end
+    end
+
+    context 'given 2' do
+      it 'returns the top 2 Item instances in descending order by total number sold' do
+        SalesEngine::Models::Item.most_items(2).should == [
+         item_one, item_two
+        ]
+      end
+    end
+  end
+
   describe '#invoice_items' do
     let!(:item) { add_instance(:item, id: 1) }
     let!(:matching_invoice_item) { add_instance(:invoice_item, item_id: 1) }

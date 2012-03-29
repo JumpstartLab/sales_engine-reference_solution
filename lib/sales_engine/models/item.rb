@@ -11,6 +11,12 @@ module SalesEngine
         }.reverse.take(limit)
       end
 
+      def self.most_items(limit)
+        instances.sort_by {|instance|
+          instance.invoice_items.map(&:quantity).inject(:+)
+        }.reverse.take(limit)
+      end
+
       def invoice_items
         InvoiceItem.find_all_by_item_id(id)
       end
