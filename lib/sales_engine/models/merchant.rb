@@ -20,7 +20,9 @@ module SalesEngine
           instance.revenue(date) }.inject(:+))
       end
 
-      def self.dates_by_revenue(limit = nil)
+      def self.dates_by_revenue(limit = Invoice.instances.size)
+        Invoice.instances.group_by(&:created_at_date).sort_by {|k, v|
+          v.map(&:revenue).inject(:+) }.map(&:first).reverse.take(limit)
       end
 
       def revenue(date = nil)

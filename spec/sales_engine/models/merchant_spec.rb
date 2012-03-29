@@ -66,18 +66,30 @@ describe SalesEngine::Models::Merchant do
     end
   end
 
-  pending '.dates_by_revenue' do
+  describe '.dates_by_revenue' do
+    let(:date) { the_date }
+
+    before do
+      SalesEngine::Models::Invoice.stub(:instances) do
+        (1..3).each_with_object([]) do |i, array|
+          i.times do
+            array << double(revenue: i, created_at_date: (date - i))
+          end
+        end
+      end
+    end
+
     context 'given a limit of 2' do
       it 'returns the top 2 Date instances with the higest revenue in descending order' do
         dates_by_revenue = SalesEngine::Models::Merchant.dates_by_revenue(2)
-        dates_by_revenue.should eq []
+        dates_by_revenue.should eq [(date - 3), (date - 2)]
       end
     end
 
     context 'given no limit' do
       it 'returns Date instances in descending order by highest revenue' do
         dates_by_revenue = SalesEngine::Models::Merchant.dates_by_revenue
-        dates_by_revenue.should eq []
+        dates_by_revenue.should eq [(date - 3), (date - 2), (date - 1)]
       end
     end
   end

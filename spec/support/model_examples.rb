@@ -40,4 +40,13 @@ shared_context 'model examples' do
       end
     end
   end
+
+  describe '#created_at_date' do
+    let(:date) { the_date }
+    let(:instance) { described_class.add_instance(created_at: date.to_s) }
+
+    it "returns the instance's created_at as a Date instance" do
+      instance.created_at_date.should eq date
+    end
+  end
 end

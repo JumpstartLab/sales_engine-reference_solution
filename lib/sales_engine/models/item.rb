@@ -30,9 +30,8 @@ module SalesEngine
       end
 
       def best_day
-        invoices.group_by {|invoice|
-          invoice.created_at.to_date
-        }.max_by {|array| array.last.size }.first
+        invoices.group_by(&:created_at_date).max_by {|array|
+          array.last.size }.first
       end
     end
   end
