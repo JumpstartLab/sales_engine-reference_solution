@@ -54,6 +54,12 @@ module SalesEngine
       def transactions
         Transaction.find_all_by_invoice_id(invoices.map(&:id))
       end
+
+      def favorite_customer
+        transactions.group_by(&:invoice).max_by {|array|
+          array.last.size
+        }.first.customer
+      end
     end
   end
 end
