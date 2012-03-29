@@ -20,6 +20,10 @@ module SalesEngine
       def days_since_activity
         Date.today - transactions.map(&:created_at).max.to_date
       end
+
+      def pending_invoices
+        invoices.reject(&:paid?)
+      end
     end
   end
 end

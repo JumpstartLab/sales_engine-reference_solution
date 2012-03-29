@@ -42,7 +42,7 @@ describe SalesEngine::Models::Customer do
   end
 
   describe '#days_since_activity' do
-    let!(:customer) { add_instance(:customer, id: 1) }
+    let!(:customer) { add_instance(:customer) }
 
     before do
       customer.should_receive(:transactions) {[
@@ -53,6 +53,21 @@ describe SalesEngine::Models::Customer do
 
     it "returns the number of days since the customer's last transaction" do
       customer.days_since_activity.should eq 5
+    end
+  end
+
+  describe '#pending_invoices' do
+    let!(:customer) { add_instance(:customer) }
+    let!(:matching_invoice) { double(paid?: false) }
+
+    before do
+      customer.should_receive(:invoices) {[
+        matching_invoice, double(paid?: true)
+      ]}
+    end
+
+    it "returns Invoice instances for the customer's invoices that are unpaid" do
+      customer.pending_invoices.should eq [matching_invoice]
     end
   end
 end
