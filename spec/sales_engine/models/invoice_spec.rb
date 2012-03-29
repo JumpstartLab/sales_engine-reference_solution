@@ -1,6 +1,74 @@
 describe SalesEngine::Models::Invoice do
   include_context 'model examples'
 
+  describe '.create' do
+    let(:attributes) { {} }
+
+    def create
+      SalesEngine::Models::Invoice.create(attributes)
+    end
+
+    def invoice_instance
+      SalesEngine::Models::Invoice.instances.first
+    end
+
+    it 'creates an Invoice instance' do
+      expect { create }.to change {
+        SalesEngine::Models::Invoice.instances.size
+      }.from(0).to(1)
+    end
+
+    context 'with a :customer' do
+      let(:customer) { add_instance(:customer, id: 1) }
+
+      it 'associates the customer with the created Invoice instance' do
+        attributes.merge!(customer: customer)
+        create
+        invoice_instance.customer.should eq customer
+      end
+    end
+
+    context 'with a :merchant' do
+      let(:merchant) { add_instance(:merchant, id: 1) }
+
+      it 'associates the merchant with the created Invoice instance' do
+        attributes.merge!(merchant: merchant)
+        create
+        invoice_instance.merchant.should eq merchant
+      end
+    end
+
+    context 'with :items' do
+      let(:item_1) { add_instance(:item, id: 1, unit_price: 5) }
+      let(:item_2) { add_instance(:item, id: 2, unit_price: 6) }
+
+      before { attributes.merge!(items: [item_1, item_2, item_2]) }
+
+      it 'creates an InvoiceItem instance for each unique item' do
+        expect { create }.to change {
+          SalesEngine::Models::InvoiceItem.instances.size
+        }.from(0).to(2)
+
+        invoice_items = SalesEngine::Models::InvoiceItem.instances
+
+        invoice_items.first.tap do |invoice_item|
+          invoice_item.quantity.should eq 1
+          invoice_item.unit_price.should eq 5
+        end
+
+        invoice_items.last.tap do |invoice_item|
+          invoice_item.quantity.should eq 2
+          invoice_item.unit_price.should eq 6
+        end
+      end
+
+      it 'associates each item with the created Invoice instance' do
+        create
+        invoice_instance.items.should =~ [item_1, item_2]
+      end
+    end
+  end
+
   describe '.pending' do
     let(:unpaid_invoice) { add_instance(:invoice) }
 

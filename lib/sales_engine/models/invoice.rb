@@ -5,6 +5,34 @@ module SalesEngine
 
       CSV_FILE_NAME = 'invoices.csv'
 
+      def self.create(attributes)
+        id = attributes.delete(:id) || 5000
+        attributes.merge!(id: id)
+
+        if customer = attributes.delete(:customer)
+          attributes.merge!(customer_id: customer.id)
+        end
+
+        if merchant = attributes.delete(:merchant)
+          attributes.merge!(merchant_id: merchant.id)
+        end
+
+        if items = attributes.delete(:items)
+          Hash.new(0).tap {|items_with_quantity|
+            items.each {|item| items_with_quantity[item] += 1 }
+          }.each do |item, quantity|
+            InvoiceItem.add_instance(
+              invoice_id: id,
+              item_id: item.id,
+              quantity: quantity,
+              unit_price: item.unit_price
+            )
+          end
+        end
+
+        add_instance(attributes)
+      end
+
       def self.pending
         instances.reject(&:paid?)
       end
