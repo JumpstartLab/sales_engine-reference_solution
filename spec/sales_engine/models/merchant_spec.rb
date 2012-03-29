@@ -16,7 +16,7 @@ describe SalesEngine::Models::Merchant do
 
     context 'given 2' do
       it 'returns the top 2 merchants in descending order by revenue' do
-        SalesEngine::Models::Merchant.most_revenue(2).should =~ [
+        SalesEngine::Models::Merchant.most_revenue(2).should == [
           merchant_one, merchant_two
         ]
       end
@@ -40,7 +40,7 @@ describe SalesEngine::Models::Merchant do
 
     context 'given 2' do
       it 'returns the top 2 merchants in descending order by total items sold' do
-        SalesEngine::Models::Merchant.most_items(2).should =~ [
+        SalesEngine::Models::Merchant.most_items(2).should == [
           merchant_one, merchant_two
         ]
       end
@@ -165,6 +165,26 @@ describe SalesEngine::Models::Merchant do
 
     it 'returns a Customer instance who has the most successful transactions with the merchant' do
       merchant.favorite_customer.should eq favorite_customer
+    end
+  end
+
+  describe '#customers_with_pending_invoices' do
+    let(:merchant) { add_instance(:merchant, id: 1) }
+    let(:customer_one) { add_instance(:customer, id: 1) }
+    let(:customer_two) { add_instance(:customer, id: 2) }
+
+    before do
+      merchant.should_receive(:invoices) {[
+        double(paid?: false, customer: customer_one),
+        double(paid?: false, customer: customer_two),
+        double(paid?: true)
+      ]}
+    end
+
+    it 'returns Customer instances who have unpaid invoices with the merchant' do
+      merchant.customers_with_pending_invoices.should =~ [
+        customer_one, customer_two
+      ]
     end
   end
 end

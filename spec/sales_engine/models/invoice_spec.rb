@@ -87,4 +87,22 @@ describe SalesEngine::Models::Invoice do
       invoice.total_items_count.should eq 5
     end
   end
+
+  describe '#paid?' do
+    let!(:invoice) { add_instance(:invoice, id: 1) }
+
+    context 'with successful transactions' do
+      before { add_transaction(invoice_id: 1) }
+
+      it 'returns true' do
+        invoice.should be_paid
+      end
+    end
+
+    context 'with no successful transactions' do
+      it 'returns false' do
+        invoice.should_not be_paid
+      end
+    end
+  end
 end

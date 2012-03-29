@@ -60,6 +60,10 @@ module SalesEngine
           array.last.size
         }.first.customer
       end
+
+      def customers_with_pending_invoices
+        invoices.reject(&:paid?).map(&:customer)
+      end
     end
   end
 end

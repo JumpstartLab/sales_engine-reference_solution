@@ -37,6 +37,10 @@ module SalesEngine
       def total_items_count
         invoice_items.map(&:quantity).inject(:+)
       end
+
+      def paid?
+        transactions.any?(&:successful?)
+      end
     end
   end
 end
