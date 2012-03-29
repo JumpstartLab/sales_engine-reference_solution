@@ -1,5 +1,5 @@
 module ExampleGroupHelpers
-  def add_instance(model_type, attributes)
+  def add_instance(model_type, attributes = {})
     model_class = {
       merchant: 'Merchant',
       invoice: 'Invoice',

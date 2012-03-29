@@ -105,4 +105,27 @@ describe SalesEngine::Models::Invoice do
       end
     end
   end
+
+  describe '#revenue' do
+    let!(:invoice) { add_instance(:invoice) }
+
+    context "with the invoice being paid" do
+      before do
+        invoice.should_receive(:paid?).and_return(true)
+        invoice.should_receive(:total_amount).and_return(5)
+      end
+
+      it "returns the invoice's total_amount" do
+        invoice.revenue.should eq 5
+      end
+    end
+
+    context "with the invoice not being paid" do
+      before { invoice.should_receive(:paid?).and_return(false) }
+
+      it 'returns 0' do
+        invoice.revenue.should eq 0
+      end
+    end
+  end
 end

@@ -1,6 +1,26 @@
 describe SalesEngine::Models::Item do
   include_context 'model examples'
 
+  describe '.most_revenue' do
+    {one: 30, two: 20, three: 10}.each do |k, v|
+      let("item_#{k}") do
+        double("item_#{k}", invoices: [double(revenue: v)])
+      end
+    end
+
+    before do
+      SalesEngine::Models::Item.should_receive(:instances) do
+        [item_three, item_two, item_one]
+      end
+    end
+
+    context 'given 2' do
+      it 'returns the top 2 Item instances in descending order by revenue' do
+        SalesEngine::Models::Item.most_revenue(2).should == [item_one, item_two]
+      end
+    end
+  end
+
   describe '#invoice_items' do
     let!(:item) { add_instance(:item, id: 1) }
     let!(:matching_invoice_item) { add_instance(:invoice_item, item_id: 1) }

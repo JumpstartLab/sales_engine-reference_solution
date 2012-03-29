@@ -24,21 +24,9 @@ module SalesEngine
       end
 
       def revenue(date = nil)
-        invoices_of_successful_transactions = transactions.
-                                              select(&:successful?).
-                                              map do |transaction|
-          invoice = transaction.invoice
-
-          if date
-            invoice if invoice.created_at.to_date == date
-          else
-            invoice
-          end
-        end
-
-        total_amount = invoices_of_successful_transactions.compact.
-                                                           map(&:total_amount).
-                                                           inject(:+)
+        total_amount = invoices.select {|invoice|
+          date ? invoice.created_at.to_date == date : true
+        }.map(&:revenue).inject(:+)
 
         Helpers.format_number(total_amount)
       end

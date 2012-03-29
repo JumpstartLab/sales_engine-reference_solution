@@ -6,11 +6,10 @@ module SalesEngine
       CSV_FILE_NAME = 'invoices.csv'
 
       def self.average_items
-        invoice_item_sizes = InvoiceItem.instances
-                                        .group_by(&:invoice_id)
-                                        .values.map(&:size)
+        average = Helpers.average(
+          InvoiceItem.instances.group_by(&:invoice_id).values.map(&:size)
+        )
 
-        average = Helpers.average(invoice_item_sizes)
         Helpers.format_number(average)
       end
 
@@ -40,6 +39,10 @@ module SalesEngine
 
       def paid?
         transactions.any?(&:successful?)
+      end
+
+      def revenue
+        paid? ? total_amount : 0
       end
     end
   end

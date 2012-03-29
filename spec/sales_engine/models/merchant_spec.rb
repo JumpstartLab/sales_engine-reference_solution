@@ -15,7 +15,7 @@ describe SalesEngine::Models::Merchant do
     end
 
     context 'given 2' do
-      it 'returns the top 2 merchants in descending order by revenue' do
+      it 'returns the top 2 Merchant instances in descending order by revenue' do
         SalesEngine::Models::Merchant.most_revenue(2).should == [
           merchant_one, merchant_two
         ]
@@ -39,7 +39,7 @@ describe SalesEngine::Models::Merchant do
     end
 
     context 'given 2' do
-      it 'returns the top 2 merchants in descending order by total items sold' do
+      it 'returns the top 2 Merchant instances in descending order by total items sold' do
         SalesEngine::Models::Merchant.most_items(2).should == [
           merchant_one, merchant_two
         ]
