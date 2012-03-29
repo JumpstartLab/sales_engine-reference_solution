@@ -1,7 +1,7 @@
 describe SalesEngine do
   describe '.startup' do
     before do
-      SalesEngine.startup('spec/support/data_sets')
+      SalesEngine.startup('spec/support/data')
     end
 
     it 'populates the instances for all of the models' do
