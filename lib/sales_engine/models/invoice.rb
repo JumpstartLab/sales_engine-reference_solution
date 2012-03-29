@@ -15,8 +15,10 @@ module SalesEngine
         instances.reject(&:paid?)
       end
 
-      def self.average_revenue
-        Helpers.format_number(Helpers.average(instances.map(&:revenue)))
+      def self.average_revenue(date = nil)
+        Helpers.format_number(Helpers.average(instances.select {|instance|
+          date ? instance.created_on?(date) : true
+        }.map(&:revenue)))
       end
 
       def customer

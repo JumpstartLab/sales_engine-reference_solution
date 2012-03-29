@@ -49,7 +49,7 @@ describe SalesEngine::Models::Merchant do
 
   describe '.revenue' do
     context 'given a date' do
-      let(:date) { Date.parse('Fri, 09 Mar 2012') }
+      let(:date) { the_date }
 
       before do
         merchant_1 = double.tap do |merchant|
@@ -74,7 +74,7 @@ describe SalesEngine::Models::Merchant do
 
   describe '#revenue' do
     let!(:merchant) { add_instance(:merchant, id: 1) }
-    let(:date) { Date.parse('Fri, 09 Mar 2012') }
+    let(:date) { the_date }
 
     before do
       add_instance(:invoice,

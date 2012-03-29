@@ -34,17 +34,36 @@ describe SalesEngine::Models::Invoice do
   end
 
   describe '.average_revenue' do
+    let(:date) { the_date }
+
     before do
       4.times do |i|
-        add_instance(:invoice).tap do |invoice|
-          invoice.should_receive(:revenue).and_return(i.next)
+        add_instance(:invoice, created_at: date.prev_day.to_s).tap do |invoice|
+          invoice.stub(:revenue).and_return(i.next)
         end
       end
     end
 
-    it 'returns the average revenue for all of the Invoice instances' do
-      average_revenue = SalesEngine::Models::Invoice.average_revenue
-      average_revenue.should be_a_big_decimal_equating_to(2.5)
+    context 'given no date' do
+      it 'returns the average revenue for all of the Invoice instances' do
+        average_revenue = SalesEngine::Models::Invoice.average_revenue
+        average_revenue.should be_a_big_decimal_equating_to(2.5)
+      end
+    end
+
+    context 'given a date' do
+      before do
+        4.times do |i|
+          add_instance(:invoice, created_at: date.to_s).tap do |invoice|
+            invoice.stub(:revenue).and_return(i.next.next)
+          end
+        end
+      end
+
+      it 'returns the average revenue for all of the Invoice instances created on the date' do
+        average_revenue = SalesEngine::Models::Invoice.average_revenue(date)
+        average_revenue.should be_a_big_decimal_equating_to(3.5)
+      end
     end
   end
 

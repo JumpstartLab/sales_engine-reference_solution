@@ -16,4 +16,8 @@ module ExampleGroupHelpers
     default_attributes = {result: 'success'}
     add_instance(:transaction, default_attributes.merge(attributes))
   end
+
+  def the_date
+    Date.parse('Fri, 09 Mar 2012')
+  end
 end

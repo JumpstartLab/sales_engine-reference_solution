@@ -41,6 +41,10 @@ module SalesEngine
               end
             end
           end
+
+          def created_on?(date)
+            created_at.to_date == date
+          end
         end
       end
     end

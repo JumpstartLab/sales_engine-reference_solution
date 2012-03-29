@@ -82,25 +82,25 @@ describe SalesEngine::Models::Item do
 
   describe '#best_day' do
     let!(:item) { add_instance(:item, id: 1) }
-    let(:best_day) { '2012-02-26 20:56:50 UTC' }
+    let(:best_day) { the_date }
 
     before do
       3.times do |i|
-        add_instance(:invoice, id: i, created_at: best_day)
+        add_instance(:invoice, id: i, created_at: best_day.to_s)
         add_instance(:invoice_item, invoice_id: i, item_id: 1)
       end
 
       [3, 4].each do |i|
-        add_instance(:invoice, id: i, created_at: '2012-02-25 20:56:50 UTC')
+        add_instance(:invoice, id: i, created_at: best_day.prev_day.to_s)
         add_instance(:invoice_item, invoice_id: i, item_id: 1)
       end
 
-      add_instance(:invoice, id: 5, created_at: '2012-02-27 20:56:50 UTC')
+      add_instance(:invoice, id: 5, created_at: best_day.next_day.to_s)
       add_instance(:invoice_item, invoice_id: 5, item_id: 1)
     end
 
     it 'returns the date with the most invoices associated with the item' do
-      item.best_day.should eq Date.parse(best_day)
+      item.best_day.should eq best_day
     end
   end
 end

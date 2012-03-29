@@ -22,7 +22,7 @@ module SalesEngine
 
       def revenue(date = nil)
         Helpers.format_number(invoices.select {|invoice|
-          date ? invoice.created_at.to_date == date : true
+          date ? invoice.created_on?(date) : true
         }.map(&:revenue).inject(:+))
       end
 
