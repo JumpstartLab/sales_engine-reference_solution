@@ -16,6 +16,10 @@ module SalesEngine
       def favorite_merchant
         invoices.group_by(&:merchant).max_by {|array| array.last.size }.first
       end
+
+      def days_since_activity
+        Date.today - transactions.map(&:created_at).max.to_date
+      end
     end
   end
 end

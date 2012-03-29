@@ -40,4 +40,19 @@ describe SalesEngine::Models::Customer do
       customer.favorite_merchant.should eq favorite_merchant
     end
   end
+
+  describe '#days_since_activity' do
+    let!(:customer) { add_instance(:customer, id: 1) }
+
+    before do
+      customer.should_receive(:transactions) {[
+        double(created_at: DateTime.now - 6),
+        double(created_at: DateTime.now - 5)
+      ]}
+    end
+
+    it "returns the number of days since the customer's last transaction" do
+      customer.days_since_activity.should eq 5
+    end
+  end
 end
